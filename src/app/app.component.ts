@@ -7,7 +7,7 @@ import { GameService } from './services/game.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements AfterViewInit {
-  @ViewChild('canvas') private canvas;
+  @ViewChild('canvas', { static: true }) private canvas;
 
   _gameSpeed = 200;
   get gameSpeed() { return this._gameSpeed; }
