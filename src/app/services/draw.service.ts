@@ -17,7 +17,7 @@ export class DrawService {
 
   clearCanvas(config: GameConfig) {
     const ctx = this.canvas.getContext('2d');
-    ctx.clearRect(
+    ctx?.clearRect(
       0,
       0,
       this.getCanvasWidth(config),
@@ -27,6 +27,10 @@ export class DrawService {
 
   drawBorder(config: GameConfig) {
     const ctx = this.canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+
     ctx.setLineDash([config.options.canGoThroughWalls ? this.blockSize : 0]);
     const strokeStyle = 'purple';
     ctx.strokeStyle = strokeStyle;
@@ -41,6 +45,10 @@ export class DrawService {
 
   drawSnack(position: Position) {
     const ctx = this.canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+
     ctx.beginPath();
     ctx.fillStyle = 'green';
     ctx.arc(
@@ -56,26 +64,33 @@ export class DrawService {
   drawSnake(positions: Position[]) {
     const fillStyle = (opacity: number) => `rgba(215, 108, 38, ${opacity})`;
     positions.forEach((position, i) => {
-      this.drawRect(position, fillStyle( (positions.length - i) / positions.length) );
+      this.drawRect(
+        position,
+        fillStyle((positions.length - i) / positions.length)
+      );
     });
   }
 
-  getCanvasHeight(config) {
+  getCanvasHeight(config: GameConfig) {
     return config.verticalBlocks * this.blockSize + this.blockSize;
   }
 
-  getCanvasWidth(config) {
+  getCanvasWidth(config: GameConfig) {
     return config.horizontalBlocks * this.blockSize + this.blockSize;
   }
 
   private drawRect(position: Position, fillStyle = '#505050') {
     const ctx = this.canvas.getContext('2d');
+    if (!ctx) {
+      return;
+    }
+
     ctx.fillStyle = fillStyle;
     ctx.fillRect(
       position.x * this.blockSize + this.blockPadding + this.blockSize / 2,
       position.y * this.blockSize + this.blockPadding + this.blockSize / 2,
       this.blockSize - 2 * this.blockPadding,
-      this.blockSize  - 2 * this.blockPadding
+      this.blockSize - 2 * this.blockPadding
     );
   }
 }

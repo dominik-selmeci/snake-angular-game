@@ -15,13 +15,13 @@ export interface GameOptions {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GameService {
   config: GameConfig;
-  draw: DrawService;
+  draw!: DrawService;
   gameLoop: any;
-  keydownListener: EventListener;
+  keydownListener!: EventListener;
   maxScore = 0;
   score = 0;
 
@@ -33,7 +33,7 @@ export class GameService {
       options: {
         canGoThroughItself: false,
         canGoThroughWalls: false,
-      }
+      },
     };
     this.snake.options = this.config.options;
     this.snake.generateSnack(this.config);
@@ -45,7 +45,7 @@ export class GameService {
     }
     this.score = 0;
 
-    if (confirm('Game Over :\'(, wanna try again?')) {
+    if (confirm("Game Over :'(, wanna try again?")) {
       this.restart();
     }
   }
@@ -54,21 +54,42 @@ export class GameService {
     return !!this.gameLoop;
   }
 
-  keydown(e) {
-    const allowedKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'w', 's', 'a', 'd'];
-      if (allowedKeys.indexOf(e.key) === -1) {
-        return;
-      }
+  keydown(e: KeyboardEvent) {
+    const allowedKeys = [
+      'ArrowUp',
+      'ArrowDown',
+      'ArrowLeft',
+      'ArrowRight',
+      'w',
+      's',
+      'a',
+      'd',
+    ];
+    if (allowedKeys.indexOf(e.key) === -1) {
+      return;
+    }
 
-      let direction: Direction;
-      switch (e.key) {
-        case 'ArrowUp':    case 'w': direction = Direction.Up; break;
-        case 'ArrowDown':  case 's': direction = Direction.Down; break;
-        case 'ArrowLeft':  case 'a': direction = Direction.Left; break;
-        case 'ArrowRight': case 'd': direction = Direction.Right; break;
-      }
+    let direction!: Direction;
+    switch (e.key) {
+      case 'ArrowUp':
+      case 'w':
+        direction = Direction.Up;
+        break;
+      case 'ArrowDown':
+      case 's':
+        direction = Direction.Down;
+        break;
+      case 'ArrowLeft':
+      case 'a':
+        direction = Direction.Left;
+        break;
+      case 'ArrowRight':
+      case 'd':
+        direction = Direction.Right;
+        break;
+    }
 
-      this.snake.direction = direction;
+    this.snake.direction = direction;
   }
 
   restart() {
@@ -114,8 +135,13 @@ export class GameService {
       const turnResult: TurnResult = this.snake.turn(this.config);
 
       switch (turnResult) {
-        case TurnResult.Collision: this.stop(); this.gameOver(); break;
-        case TurnResult.EatingSnack: this.score++; break;
+        case TurnResult.Collision:
+          this.stop();
+          this.gameOver();
+          break;
+        case TurnResult.EatingSnack:
+          this.score++;
+          break;
       }
 
       this.drawGame();

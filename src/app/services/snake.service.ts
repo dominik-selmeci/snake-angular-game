@@ -20,15 +20,17 @@ export enum TurnResult {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SnakeService {
-  positions: Position[];
-  snackPosition: Position;
-  options: GameOptions;
+  positions!: Position[];
+  snackPosition!: Position;
+  options!: GameOptions;
 
-  private _direction: Direction;
-  public get direction() { return this._direction; }
+  private _direction!: Direction;
+  public get direction() {
+    return this._direction;
+  }
   public set direction(direction: Direction) {
     if (!this.isReverseDirection(direction)) {
       this._direction = direction;
@@ -41,9 +43,9 @@ export class SnakeService {
 
   initStartingPosition() {
     this.positions = [
-      {x: 4, y: 2},
-      {x: 3, y: 2},
-      {x: 2, y: 2},
+      { x: 4, y: 2 },
+      { x: 3, y: 2 },
+      { x: 2, y: 2 },
     ];
     this.direction = Direction.Right;
   }
@@ -78,20 +80,36 @@ export class SnakeService {
   private getNewPosition(config?: GameConfig): Position {
     const newPos = {
       x: this.positions[0].x,
-      y: this.positions[0].y
+      y: this.positions[0].y,
     };
     switch (this.direction) {
-      case Direction.Up: newPos.y--; break;
-      case Direction.Down: newPos.y++; break;
-      case Direction.Left: newPos.x--; break;
-      case Direction.Right: newPos.x++; break;
+      case Direction.Up:
+        newPos.y--;
+        break;
+      case Direction.Down:
+        newPos.y++;
+        break;
+      case Direction.Left:
+        newPos.x--;
+        break;
+      case Direction.Right:
+        newPos.x++;
+        break;
     }
 
     if (this.options.canGoThroughWalls && config) {
-      if (newPos.x >= config.horizontalBlocks) { newPos.x = 0; }
-      if (newPos.x < 0) { newPos.x = config.horizontalBlocks - 1; }
-      if (newPos.y >= config.verticalBlocks) { newPos.y = 0; }
-      if (newPos.y < 0) { newPos.y = config.verticalBlocks - 1; }
+      if (newPos.x >= config.horizontalBlocks) {
+        newPos.x = 0;
+      }
+      if (newPos.x < 0) {
+        newPos.x = config.horizontalBlocks - 1;
+      }
+      if (newPos.y >= config.verticalBlocks) {
+        newPos.y = 0;
+      }
+      if (newPos.y < 0) {
+        newPos.y = config.verticalBlocks - 1;
+      }
     }
 
     return newPos;
@@ -103,7 +121,8 @@ export class SnakeService {
     }
 
     const newPos = this.getNewPosition();
-    const horizontalCheck = newPos.x < 0 || newPos.x > config.horizontalBlocks - 1;
+    const horizontalCheck =
+      newPos.x < 0 || newPos.x > config.horizontalBlocks - 1;
     const verticalCheck = newPos.y < 0 || newPos.y > config.verticalBlocks - 1;
 
     return horizontalCheck || verticalCheck;
@@ -115,7 +134,9 @@ export class SnakeService {
     }
 
     const newPos = this.getNewPosition();
-    const collisionBlock = this.positions.find((pos) => pos.x === newPos.x && pos.y === newPos.y);
+    const collisionBlock = this.positions.find(
+      (pos) => pos.x === newPos.x && pos.y === newPos.y
+    );
     return !!collisionBlock;
   }
 
@@ -124,19 +145,25 @@ export class SnakeService {
     const secondPos = this.positions[1];
 
     switch (direction) {
-      case Direction.Up: return firstPos.y === secondPos.y + 1;
-      case Direction.Down: return firstPos.y === secondPos.y - 1;
-      case Direction.Left: return firstPos.x === secondPos.x + 1;
-      case Direction.Right: return firstPos.x === secondPos.x - 1;
+      case Direction.Up:
+        return firstPos.y === secondPos.y + 1;
+      case Direction.Down:
+        return firstPos.y === secondPos.y - 1;
+      case Direction.Left:
+        return firstPos.x === secondPos.x + 1;
+      case Direction.Right:
+        return firstPos.x === secondPos.x - 1;
     }
   }
 
   private isEatingSnack(): boolean {
     const firstPos = this.positions[0];
-    return firstPos.x === this.snackPosition.x && firstPos.y === this.snackPosition.y;
+    return (
+      firstPos.x === this.snackPosition.x && firstPos.y === this.snackPosition.y
+    );
   }
 
-  private getRandomInt(min, max) {
+  private getRandomInt(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 }
