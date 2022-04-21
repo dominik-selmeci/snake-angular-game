@@ -1,4 +1,4 @@
-# SnakeAngular
+# SnakeAngular - [play DEMO here](https://dominik-selmeci.github.io/demos/snake-angular/)
 
 Just my simple snake game project :).
 
